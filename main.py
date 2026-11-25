@@ -26,9 +26,16 @@ ROAST = (
 )
 
 OUTPUT_NAME = "entry.txt"
+MAX_CHARS = 200
 
 
 def main() -> None:
+    # The gate admits 1 to 200 characters, so refuse to write anything
+    # that would fail it rather than submitting an invalid entry.
+    if not 1 <= len(ROAST) <= MAX_CHARS:
+        raise SystemExit(f"roast is {len(ROAST)} chars, gate allows 1-{MAX_CHARS}")
+    if "\n" in ROAST:
+        raise SystemExit("roast must stay a single line")
     target_dir = os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output"
     os.makedirs(target_dir, exist_ok=True)
     with open(os.path.join(target_dir, OUTPUT_NAME), "w", encoding="utf-8") as f:
